@@ -1,0 +1,10 @@
+# 拒绝所有外部访问日志目录
+Require all denied
+
+# 防止目录列表
+Options -Indexes
+
+# 禁止访问所有文件
+<FilesMatch ".*">
+    Require all denied
+</FilesMatch>
