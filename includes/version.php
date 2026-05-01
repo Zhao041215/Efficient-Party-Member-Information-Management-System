@@ -5,13 +5,13 @@
  */
 
 // 系统版本号
-define('SYSTEM_VERSION', '2.3.4');
+define('SYSTEM_VERSION', '2.3.5');
 
 // CSS版本号
 define('CSS_VERSION', '2.3.3');
 
 // JS版本号
-define('JS_VERSION', '2.3.2');
+define('JS_VERSION', '2.3.3');
 
 // 获取带版本号的资源URL
 function getVersionedAsset($path) {
