@@ -55,8 +55,8 @@ try {
 
     // 查询账户
     $accounts = $db->fetchAll(
-        "SELECT u.username, u.name, u.role, u.gender, u.is_active,
-                si.college, si.grade, si.class, si.info_completed, u.created_at
+        "SELECT u.username, u.name, u.role, u.is_active,
+                si.gender, si.college, si.grade, si.class, si.info_completed, u.created_at
          FROM users u
          LEFT JOIN student_info si ON u.id = si.user_id
          WHERE $whereClause
