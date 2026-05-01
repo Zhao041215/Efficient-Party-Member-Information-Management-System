@@ -26,6 +26,35 @@ function getSystemOptions($type) {
 }
 
 /**
+ * 验证值是否在系统选项中
+ * @param string $type 选项类型 (college, grade, class, etc.)
+ * @param string $value 要验证的值
+ * @return bool 如果有效返回true，否则返回false
+ */
+function validateSystemOption($type, $value) {
+    if (empty($value)) {
+        return true; // 空值由必填字段验证处理
+    }
+
+    $validOptions = getSystemOptions($type);
+    return in_array($value, $validOptions, true);
+}
+
+/**
+ * 验证年级格式（必须是"xxxx级"）
+ * @param string $grade 年级值
+ * @return bool 如果格式有效返回true，否则返回false
+ */
+function validateGradeFormat($grade) {
+    if (empty($grade)) {
+        return true; // 空值由必填字段验证处理
+    }
+
+    // 必须匹配模式：4位数字 + "级" (例如："2024级")
+    return preg_match('/^\d{4}级$/', $grade) === 1;
+}
+
+/**
  * 获取政治面貌的兼容值列表
  */
 function getPoliticalStatusVariants($status) {

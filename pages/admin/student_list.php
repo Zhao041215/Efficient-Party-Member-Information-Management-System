@@ -90,12 +90,14 @@ function getPoliticalBadgeClass($status) {
     <div class="card-header">
         <h3 class="card-title"><i class="fa-solid fa-users"></i> 学生信息查询</h3>
         <div class="card-actions">
-            <button class="btn btn-primary btn-sm" onclick="showImportModal()">
-                <i class="fa-solid fa-file-import"></i> 导入信息
-            </button>
-            <a href="/api/admin/download_student_template.php" class="btn btn-secondary btn-sm">
-                <i class="fa-solid fa-download"></i> 下载模板
-            </a>
+            <?php if (isSuperAdmin()): ?>
+                <button class="btn btn-primary btn-sm" onclick="showImportModal()">
+                    <i class="fa-solid fa-file-import"></i> 导入信息
+                </button>
+                <a href="/api/admin/download_student_template.php" class="btn btn-secondary btn-sm">
+                    <i class="fa-solid fa-download"></i> 下载模板
+                </a>
+            <?php endif; ?>
             <button class="btn btn-success btn-sm" onclick="exportExcel()">
                 <i class="fa-solid fa-file-excel"></i> 导出全部
             </button>

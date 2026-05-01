@@ -116,6 +116,9 @@ $classes = getSystemOptions('class');
             <a href="/api/admin/download_template.php" class="btn btn-secondary btn-sm">
                 <i class="fa-solid fa-download"></i> 下载模板
             </a>
+            <button class="btn btn-success btn-sm" onclick="exportAccounts()">
+                <i class="fa-solid fa-file-export"></i> 导出
+            </button>
         </div>
     </div>
     <div class="card-body">
@@ -280,6 +283,9 @@ $classes = getSystemOptions('class');
             </button>
             <button class="btn btn-danger btn-sm" onclick="batchDelete()">
                 <i class="fa-solid fa-trash"></i> 批量删除
+            </button>
+            <button class="btn btn-success btn-sm" onclick="exportSelected()">
+                <i class="fa-solid fa-file-export"></i> 导出选中
             </button>
         </div>
 
@@ -1060,6 +1066,52 @@ function changePerPage(value) {
     url.searchParams.set('per_page', value);
     url.searchParams.set('page', '1');
     window.location.href = url.toString();
+}
+
+// 导出全部账户（带当前筛选条件）
+function exportAccounts() {
+    const currentUrl = new URL(window.location.href);
+    const params = new URLSearchParams(currentUrl.search);
+
+    // 构建导出URL，带上当前筛选条件
+    const exportUrl = '/api/admin/export_accounts.php?' + params.toString();
+
+    // 触发下载
+    window.location.href = exportUrl;
+
+    Toast.success('正在导出账户信息...');
+}
+
+// 导出选中账户
+async function exportSelected() {
+    const ids = getSelectedIds();
+    if (ids.length === 0) {
+        Toast.warning('请至少选择一个账户');
+        return;
+    }
+
+    try {
+        const response = await Ajax.post('/api/admin/export_accounts_batch.php', {
+            user_ids: ids
+        });
+
+        if (!response.success) {
+            Toast.error(response.message);
+            return;
+        }
+
+        Toast.success(response.message);
+
+        // 触发下载
+        const link = document.createElement('a');
+        link.href = response.download_url;
+        link.download = response.filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    } catch (error) {
+        Toast.error('导出失败，请稍后重试');
+    }
 }
 
 document.querySelectorAll('.modal-overlay').forEach((modal) => {

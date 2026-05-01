@@ -332,6 +332,29 @@ function userImportValidateRow($row, $columns, $rowNum, $db, &$seenUsernames) {
                 $data['gender'] = $gender;
             }
         }
+
+        // 验证学院是否在系统设置中
+        if (($data['college'] ?? '') !== '') {
+            if (!validateSystemOption('college', $data['college'])) {
+                $reasons[] = '学院不在系统设置中：' . $data['college'];
+            }
+        }
+
+        // 验证年级格式和是否在系统设置中
+        if (($data['grade'] ?? '') !== '') {
+            if (!validateGradeFormat($data['grade'])) {
+                $reasons[] = '年级格式错误（应为"xxxx级"）：' . $data['grade'];
+            } elseif (!validateSystemOption('grade', $data['grade'])) {
+                $reasons[] = '年级不在系统设置中：' . $data['grade'];
+            }
+        }
+
+        // 验证班级是否在系统设置中
+        if (($data['class'] ?? '') !== '') {
+            if (!validateSystemOption('class', $data['class'])) {
+                $reasons[] = '班级不在系统设置中：' . $data['class'];
+            }
+        }
     }
 
     if (!empty($reasons)) {

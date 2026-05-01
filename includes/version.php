@@ -5,7 +5,7 @@
  */
 
 // 系统版本号
-define('SYSTEM_VERSION', '2.3.3');
+define('SYSTEM_VERSION', '2.3.4');
 
 // CSS版本号
 define('CSS_VERSION', '2.3.3');

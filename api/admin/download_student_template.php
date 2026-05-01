@@ -3,7 +3,7 @@
  * 下载学生信息导入模板
  */
 require_once __DIR__ . '/../../includes/auth.php';
-requireRole('admin');
+requireRole('superadmin');
 
 logOperation('export', 'template', null, '下载学生信息导入模板', [
     'export_type' => 'student_import_template',

@@ -5,7 +5,7 @@
  */
 require_once __DIR__ . '/../../includes/auth.php';
 require_once __DIR__ . '/../../includes/security.php';
-requireRole('admin');
+requireRole('superadmin');
 Security::requireCSRFToken();
 
 header('Content-Type: application/json');
@@ -248,7 +248,39 @@ try {
         }
         
         $userId = $user['id'];
-        
+
+        // 验证学院、年级、班级是否在系统设置中
+        $validationErrors = [];
+
+        if (!empty($data['college']) && !validateSystemOption('college', $data['college'])) {
+            $validationErrors[] = '学院不在系统设置中：' . $data['college'];
+        }
+
+        if (!empty($data['grade'])) {
+            if (!validateGradeFormat($data['grade'])) {
+                $validationErrors[] = '年级格式错误（应为"xxxx级"）：' . $data['grade'];
+            } elseif (!validateSystemOption('grade', $data['grade'])) {
+                $validationErrors[] = '年级不在系统设置中：' . $data['grade'];
+            }
+        }
+
+        if (!empty($data['class']) && !validateSystemOption('class', $data['class'])) {
+            $validationErrors[] = '班级不在系统设置中：' . $data['class'];
+        }
+
+        if (!empty($validationErrors)) {
+            $errorMessage = "第{$rowNum}行: " . implode('；', $validationErrors);
+            $errors[] = $errorMessage;
+            $importDetails[] = [
+                'row_number' => $rowNum,
+                'result' => 'failed',
+                'student_no' => $data['student_no'],
+                'error' => $errorMessage
+            ];
+            $errorCount++;
+            continue;
+        }
+
         // 检查是否已有student_info记录
         $studentInfo = $db->fetchOne("SELECT * FROM student_info WHERE user_id = ?", [$userId]);
         
